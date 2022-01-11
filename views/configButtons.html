@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>INKY CONFIG</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"
+            integrity="sha512-RNLkV3d+aLtfcpEyFG8jRbnWHxUqVZozacROI4J2F1sTaDqo1dPQYs01OMi1t1w9Y2FdbSCDSQ2ZVdAC8bzgAg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+
+<script>
+    $(function () {
+        for (var r = 0; r < 8; r++) {
+            $("#imageGrid").append('<div id="r' + r + '" className="row"></div>');
+            for (var c = 0; c < 3; c++) {
+                $("#r" + r).append(
+                    '<div style="width: 80px; height: 80px">' +
+                    '<a href="/inky/config/' + (c + r * 3) + '">' +
+                    '<img id="' + (c + r * 3) + '" src="/images/' + (c + r * 3) + '.png" style="display:block;margin-top: 50%;margin-right: 50%;margin-left: 50%;margin-bottom: 50%;">' +
+                    '</a>' +
+                    '</div>'
+                )
+            }
+        }
+
+        $('#form').attr('action', '/inky/config/' + button)
+        $('#' + button).css('border', '2px solid white').css('border-radius', '20px')
+    });
+
+    const fileInput = document.getElementById("image");
+
+    window.addEventListener('paste', e => {
+        fileInput.files = e.clipboardData.files;
+    });
+</script>
+
+<body style="background: #191919">
+<div class="row" style="padding: 1% 1% 0 5%">
+    <div id="imageGrid" class="column" style="border-style: dashed;border-color: white;width: auto"></div>
+
+    <div class='column' style="width: auto">
+        <h1>Config Options</h1>
+        <form id="form" method='post' enctype="multipart/form-data">
+            <input type='file' id="image" class="form-control-file" name='image'>
+            <textarea type="text" name="test" id="code" style="width: 50%">print('Hello, World!')&#13;&#10;</textarea>
+            <input type='submit'>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+
+<script src="/javascript/pyBundle.js"></script>
+<style>
+    @font-face {
+        font-family: "JetBrains Mono";
+        src: url('/stylesheets/JetBrainsMono-Light.ttf');
+    }
+
+    h1 {
+        color: white;
+        font-family: "JetBrains Mono";
+    }
+</style>
