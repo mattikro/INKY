@@ -43,13 +43,13 @@ router.post('/canvas', (req, res) => {
     try {
         jsonFile.writeFileSync('public/canvas.json', JSON.parse(req.body['canvas']));
         jsonFile.writeFileSync('public/config.json', JSON.parse(req.body['config']));
-        Jimp.read(Buffer.from(req.body['image'],'base64'), function (err, image) {
-            if (err) {
-                console.log(err)
-            } else {
-                image.write("new-image.bmp")
-            }
-        })
+        // Jimp.read(Buffer.from(req.body['image'],'base64'), function (err, image) {
+        //     if (err) {
+        //         console.log(err)
+        //     } else {
+        //         image.write("new-image.bmp")
+        //     }
+        // })
     } catch (e) {
         console.log(e)
         res.send(e);

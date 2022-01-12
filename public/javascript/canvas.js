@@ -58,8 +58,8 @@ loadConfig = function (button) {
         '            <label for="held" class="white">HELD</label>\n' +
         '            <textarea class="code" id="held" style="height: 10px">' + configData['buttons'][button]['held'] + '</textarea>\n' +
         '            <hr class="white">\n' +
-        '            <label for="misc" class="white">MISC</label>\n' +
-        '            <textarea class="code" id="misc" style="height: 10px">' + configData['buttons'][button]['misc'] + '</textarea>');
+        '            <label for="pressed" class="white">PRESSED</label>\n' +
+        '            <textarea class="code" id="pressed" style="height: 10px">' + configData['buttons'][button]['pressed'] + '</textarea>');
     loadEditor(button);
 }
 
