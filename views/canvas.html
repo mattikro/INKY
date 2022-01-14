@@ -23,17 +23,18 @@
     <title>CONFIG REMOTE</title>
 </head>
 
-<body style="background: #282828">
+<body style="background: #262626">
 <div class="container-fluid" style="height: 592px; padding:0 5% 0">
 
     <br>
     <div class="row">
-        <br>
         <h1 onclick="loadGlobals()" class="buttons col" style="border: none">CONFIG REMOTE</h1>
-        <!--
-        <h1 onclick="newCanvas()" class="buttons col-md-auto" style="margin-right: 20px">CLEAR</h1>
-                -->
-        <h1 onclick="loadGlobals()" class="buttons col-md-auto" style="margin-right: 20px">GLOBALS</h1>
+        <div class="col">
+            <input id="profile" list="profileSelector" class="buttons white"
+                   style="background: black !important; float: right;width: 200px !important; height: 50px !important;"/>
+            <datalist id="profileSelector"></datalist>
+        </div>
+        <h1 onclick="load()" class="buttons col-md-auto" style="margin-right: 20px">LOAD</h1>
         <h1 onclick="save()" id="save" class="buttons col-md-auto">SAVED</h1>
         <hr style="color: white">
         <br>
@@ -57,23 +58,3 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="/javascript/canvas.js"></script>
 </body>
-<script>
-    $(window).keyup(function (e) {
-        if (e.keyCode == 8) {
-            canvas.getActiveObjects().forEach((obj) => {
-                canvas.remove(obj)
-            });
-            canvas.discardActiveObject().renderAll();
-        }
-        if (e.keyCode == 32) {
-            loadCanvas();
-        }
-        if (e.keyCode == 71) {
-            //alert(code['held'].getValue())
-            //drawGrid();
-        }
-        if (e.keyCode == 13) {
-            console.log(canvas.toDataURL({multiplier: 0.5}))
-        }
-    });
-</script>

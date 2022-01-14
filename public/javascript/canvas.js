@@ -1,4 +1,11 @@
 let theme = 'lesser-dark'
+//console.dir(profileName)
+$('#profile').val(profileName['selected']);
+
+profileName['profiles'].forEach(profile => {
+    $('#profileSelector').append('<option value="' + profile + '">')
+});
+
 
 for (let r = 0; r < 8; r++) {
     $('#grid').append('<div id="r' + r + '" class="row"></div>');
@@ -9,14 +16,17 @@ for (let r = 0; r < 8; r++) {
 
 
 save = function () {
-    $.post("/inky/canvas", {
-        canvas: JSON.stringify(canvas.toJSON()),
-        config: JSON.stringify(configData),
-        image: canvas.toDataURL({multiplier: 0.5})
+    configData['canvas'] = canvas.toJSON();
+    configData['image'] = canvas.toDataURL({multiplier: 0.5});
+    $.post('/inky/canvas/' + $('#profile').val(), {
+        profile: JSON.stringify(configData)
     });
-    $('#save').text('SAVED')
+    window.location.replace("/inky/canvas");
 }
 
+load = function () {
+    window.location.replace("/inky/canvas/" + $('#profile').val());
+}
 
 let code = [];
 loadEditor = function (button = null) {
@@ -113,7 +123,7 @@ let newCanvas = (function () {
 })();
 
 loadCanvas = (function () {
-    canvas.loadFromJSON(canvasData, canvas.renderAll.bind(canvas));
+    canvas.loadFromJSON(configData['canvas'], canvas.renderAll.bind(canvas));
     return arguments.callee;
 })();
 
@@ -130,7 +140,7 @@ pasteImage = function (e) {
     e.preventDefault();
     e.stopPropagation();
     for (var i = 0; i < items.length; i++) {
-        if (items[i].type.indexOf('image') == -1) continue;
+        if (items[i].type.indexOf('image') === -1) continue;
         var form = new FormData();
         form.append('image', items[i].getAsFile());
         axios({
@@ -153,18 +163,11 @@ pasteImage = function (e) {
 };
 $(window).on('paste', pasteImage);
 
-//
-// drawGrid = function (e) {
-//     for (var i = 0; i < canvas.width; i += (canvas.width / 3))
-//         canvas.add(new fabric.Line([i, 0, i, canvas.height], {
-//             stroke: '#FFFFFF',
-//             strokeWidth: .1,
-//             selectable: false
-//         }));
-//     for (var i = 0; i < canvas.height; i += (canvas.height / 8))
-//         canvas.add(new fabric.Line([0, i, canvas.height, i], {
-//             stroke: '#FFFFFF',
-//             strokeWidth: .1,
-//             selectable: false
-//         }));
-// };
+$(window).keyup(function (e) {
+    if (e.keyCode === 8) {
+        canvas.getActiveObjects().forEach((obj) => {
+            canvas.remove(obj)
+        });
+        canvas.discardActiveObject().renderAll();
+    }
+});

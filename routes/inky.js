@@ -3,7 +3,6 @@ const router = express.Router();
 const multer = require('multer');
 const fs = require('fs');
 let jsonFile = require('jsonfile');
-const Jimp = require("jimp")
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'public/images')
@@ -12,44 +11,41 @@ const storage = multer.diskStorage({
 const upload = multer({storage: storage})
 
 
-// router.get('/config', (req, res) => {
-//     res.render('config')
-// });
-//
-//
-// router.get('/config/:button', (req, res) => {
-//     res.render('configButtons', {button: req.params['button']})
-// });
-//
-//
-// router.post('/config/:button', upload.single('image'), (req, res) => {
-//     console.log(req)
-//     fs.rename(req.file['path'], 'public/images/' + req.params['button'] + '.png', function (err) {
-//         if (err) console.log('ERROR: ' + err);
-//     });
-//     //console.log(req.body['test'])
-//     res.redirect('/inky/config')
-// });
-
-
 router.get('/canvas', (req, res) => {
+    let profiles = fs.readFileSync('./profiles/profiles.json')
+    let profile = fs.readFileSync('./profiles/' + JSON.parse(profiles)['selected'] + '.json')
     res.render('canvas', {
-        canvasData: fs.readFileSync('public/canvas.json'),
-        configData: fs.readFileSync('public/config.json')
+        profileName: profiles,
+        configData: profile
     })
 });
 
-router.post('/canvas', (req, res) => {
+router.get('/canvas/:profile', (req, res) => {
     try {
-        jsonFile.writeFileSync('public/canvas.json', JSON.parse(req.body['canvas']));
-        jsonFile.writeFileSync('public/config.json', JSON.parse(req.body['config']));
-        // Jimp.read(Buffer.from(req.body['image'],'base64'), function (err, image) {
-        //     if (err) {
-        //         console.log(err)
-        //     } else {
-        //         image.write("new-image.bmp")
-        //     }
-        // })
+        let profiles = JSON.parse(fs.readFileSync('./profiles/profiles.json'))
+        let profile = fs.readFileSync('./profiles/' + req.params['profile'] + '.json')
+        profiles['selected'] = req.params['profile'];
+        res.render('canvas', {
+            profileName: JSON.stringify(profiles),
+            configData: profile
+        })
+    } catch (e) {
+        console.log(e);
+        res.redirect('/inky/canvas')
+    }
+});
+
+router.post('/canvas/:profile', (req, res) => {
+    console.log(req.params['profile']);
+    try {
+        let profiles = jsonFile.readFileSync('./profiles/profiles.json')
+        profiles['selected'] = req.params['profile'].replaceAll(' ', '_');
+        if (profiles['profiles'].indexOf(profiles['selected']) === -1) {
+            profiles['profiles'].push(profiles['selected']);
+        }
+        console.log(profiles)
+        jsonFile.writeFileSync('./profiles/profiles.json', profiles)
+        jsonFile.writeFileSync('./profiles/' + profiles['selected'] + '.json', JSON.parse(req.body['profile']));
     } catch (e) {
         console.log(e)
         res.send(e);
