@@ -18,14 +18,14 @@ for (let r = 0; r < 8; r++) {
 save = function () {
     configData['canvas'] = canvas.toJSON();
     configData['image'] = canvas.toDataURL({multiplier: 0.5});
-    $.post('/inky/canvas/' + $('#profile').val(), {
+    $.post('/inky/' + $('#profile').val(), {
         profile: JSON.stringify(configData)
     });
-    window.location.replace("/inky/canvas");
+    window.location.replace("/inky");
 }
 
 load = function () {
-    window.location.replace("/inky/canvas/" + $('#profile').val());
+    window.location.replace("/inky/" + $('#profile').val());
 }
 
 let code = [];
@@ -145,7 +145,7 @@ pasteImage = function (e) {
         form.append('image', items[i].getAsFile());
         axios({
             method: "post",
-            url: "/inky/canvas/image",
+            url: "/inky/image",
             data: form,
             headers: {"Content-Type": "multipart/form-data"},
         })

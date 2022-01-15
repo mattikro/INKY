@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
 const upload = multer({storage: storage})
 
 
-router.get('/canvas', (req, res) => {
+router.get('/', (req, res) => {
     let profiles = fs.readFileSync('./profiles/profiles.json')
     let profile = fs.readFileSync('./profiles/' + JSON.parse(profiles)['selected'] + '.json')
     res.render('canvas', {
@@ -20,7 +20,13 @@ router.get('/canvas', (req, res) => {
     })
 });
 
-router.get('/canvas/:profile', (req, res) => {
+router.get('/get', (req, res) => {
+    let profiles = fs.readFileSync('./profiles/profiles.json')
+    let profile = fs.readFileSync('./profiles/' + JSON.parse(profiles)['selected'] + '.json')
+    res.send(profile)
+});
+
+router.get('/:profile', (req, res) => {
     try {
         let profiles = JSON.parse(fs.readFileSync('./profiles/profiles.json'))
         let profile = fs.readFileSync('./profiles/' + req.params['profile'] + '.json')
@@ -31,11 +37,11 @@ router.get('/canvas/:profile', (req, res) => {
         })
     } catch (e) {
         console.log(e);
-        res.redirect('/inky/canvas')
+        res.redirect('/inky')
     }
 });
 
-router.post('/canvas/:profile', (req, res) => {
+router.post('/:profile', (req, res) => {
     console.log(req.params['profile']);
     try {
         let profiles = jsonFile.readFileSync('./profiles/profiles.json')
@@ -52,7 +58,7 @@ router.post('/canvas/:profile', (req, res) => {
     }
 });
 
-router.post('/canvas/image', upload.single('image'), (req, res) => {
+router.post('/image', upload.single('image'), (req, res) => {
     console.log(req.file)
     fs.rename(req.file['path'], 'public/images/' + req.file['originalname'], function (err) {
         if (err) console.log('ERROR: ' + err);
