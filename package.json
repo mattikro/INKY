@@ -16,6 +16,7 @@
     "http-errors": "^2.0.0",
     "jimp": "^0.16.1",
     "node-fetch": "^3.1.0",
+    "puppeteer": "^13.1.2",
     "request": "^2.88.2",
     "selenium": "^2.20.0",
     "selenium-webdriver": "^4.1.0"

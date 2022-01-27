@@ -7,6 +7,7 @@ const app = express();
 
 
 
+
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
@@ -22,6 +23,10 @@ app.use('/disney', disneyRouter);
 
 const inkyRouter = require('./routes/inky.js');
 app.use('/inky', inkyRouter);
+
+const coobRouter = require('./routes/coob.js');
+const {system} = require("selenium-webdriver/lib/proxy");
+app.use('/coob', coobRouter);
 
 
 module.exports = app;

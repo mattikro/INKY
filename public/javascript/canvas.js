@@ -6,6 +6,9 @@ profileName['profiles'].forEach(profile => {
     $('#profileSelector').append('<option value="' + profile + '">')
 });
 
+$.getJSON( "/inky/battery/", function( data ) {
+    $('#battery').text(data['percentage']+'%, Last updated: ' + Date(data['time']).toString());
+});
 
 for (let r = 0; r < 8; r++) {
     $('#grid').append('<div id="r' + r + '" class="row"></div>');
@@ -140,9 +143,11 @@ pasteImage = function (e) {
     e.preventDefault();
     e.stopPropagation();
     for (var i = 0; i < items.length; i++) {
+        console.log(window.webkitURL.createObjectURL(items[i].getAsFile()))
         if (items[i].type.indexOf('image') === -1) continue;
         var form = new FormData();
         form.append('image', items[i].getAsFile());
+        console.log('form loaded')
         axios({
             method: "post",
             url: "/inky/image",

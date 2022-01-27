@@ -20,10 +20,33 @@ router.get('/', (req, res) => {
     })
 });
 
+router.get('/battery', upload.single('image'), (req, res) => {
+    let battery = jsonFile.readFileSync('./battery.json')
+    res.send(battery[battery.length - 1])
+});
+
+router.post('/battery/:percentage', upload.single('image'), (req, res) => {
+    let battery = jsonFile.readFileSync('./battery.json')
+    battery.push({
+        percentage: req.params['percentage'],
+        time: Date.now()
+    });
+    jsonFile.writeFileSync('./battery.json', battery)
+    res.end()
+});
+
 router.get('/get', (req, res) => {
     let profiles = fs.readFileSync('./profiles/profiles.json')
     let profile = fs.readFileSync('./profiles/' + JSON.parse(profiles)['selected'] + '.json')
     res.send(profile)
+});
+
+router.post('/image', upload.single('image'), (req, res) => {
+    console.log(req.file)
+    fs.rename(req.file['path'], 'public/images/' + req.file['originalname'], function (err) {
+        if (err) console.log('ERROR: ' + err);
+    });
+    res.send('/images/' + req.file['originalname'])
 });
 
 router.get('/:profile', (req, res) => {
@@ -58,13 +81,6 @@ router.post('/:profile', (req, res) => {
     }
 });
 
-router.post('/image', upload.single('image'), (req, res) => {
-    console.log(req.file)
-    fs.rename(req.file['path'], 'public/images/' + req.file['originalname'], function (err) {
-        if (err) console.log('ERROR: ' + err);
-    });
-    res.send('/images/' + req.file['originalname'])
-});
 
 module.exports = router;
 
